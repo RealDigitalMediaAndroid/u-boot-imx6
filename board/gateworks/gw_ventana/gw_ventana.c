@@ -13,6 +13,7 @@
 #include <asm/arch/mx6-pins.h>
 #include <asm/arch/mxc_hdmi.h>
 #include <asm/arch/sys_proto.h>
+#include <asm/arch/imx-regs.h>
 #include <asm/gpio.h>
 #include <asm/imx-common/boot_mode.h>
 #include <asm/imx-common/sata.h>
@@ -652,6 +653,24 @@ static const struct boot_mode board_boot_modes[] = {
 };
 #endif
 
+#define ANDROID_RECOVERY_BOOT	(1 << 7)
+#define ANDROID_FASTBOOT_BOOT	(1 << 8)
+#define SNVS_LPGPR		0x68
+
+static void set_android_environment_flags(void)
+{
+	u32 reg;
+	int recovery;
+	int fastboot;
+	reg = readl(SNVS_BASE_ADDR + SNVS_LPGPR);
+	recovery = (reg & ANDROID_RECOVERY_BOOT) == ANDROID_RECOVERY_BOOT;
+	fastboot = (reg & ANDROID_FASTBOOT_BOOT) == ANDROID_FASTBOOT_BOOT;
+	reg &= ~(ANDROID_RECOVERY_BOOT | ANDROID_FASTBOOT_BOOT);
+	writel(reg, SNVS_BASE_ADDR + SNVS_LPGPR);
+	setenv("android_recovery", recovery ? "1" : "0");
+	setenv("android_fastboot", fastboot ? "1" : "0");
+}
+
 /* late init */
 int misc_init_r(void)
 {
@@ -753,6 +772,7 @@ int misc_init_r(void)
 	add_board_boot_modes(board_boot_modes);
 #endif
 
+	set_android_environment_flags();
 
 	return 0;
 }
