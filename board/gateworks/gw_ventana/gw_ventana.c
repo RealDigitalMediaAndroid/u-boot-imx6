@@ -753,8 +753,6 @@ int misc_init_r(void)
 	add_board_boot_modes(board_boot_modes);
 #endif
 
-	/* disable boot watchdog */
-	gsc_boot_wd_disable();
 
 	return 0;
 }
