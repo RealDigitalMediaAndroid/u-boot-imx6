@@ -557,8 +557,6 @@ int dram_init(void)
 	return 0;
 }
 
-static void set_android_environment_flags(void);
-
 int board_init(void)
 {
 	struct iomuxc *const iomuxc_regs = (struct iomuxc *)IOMUXC_BASE_ADDR;
@@ -583,7 +581,6 @@ int board_init(void)
 #endif
 	/* read Gateworks EEPROM into global struct (used later) */
 	board_type = read_eeprom(CONFIG_I2C_GSC, &ventana_info);
-	set_android_environment_flags();
 
 	setup_iomux_gpio(board_type, &ventana_info);
 
@@ -660,13 +657,24 @@ static const struct boot_mode board_boot_modes[] = {
 #define ANDROID_FASTBOOT_BOOT	(1 << 6)
 #define ANDROID_I2C_OFFSET	0xDF
 
-// Run this right after read_eeprom() so it will make sure
-// the eeprom is ready for us.
 static void set_android_environment_flags(void)
 {
 	u8 reg;
 	int recovery = 0;
 	int fastboot = 0;
+
+        // lifted from read_eeprom()
+	/*
+	 * On a board with a missing/depleted backup battery for GSC, the
+	 * board may be ready to probe the GSC before its firmware is
+	 * running.  We will wait here indefinately for the GSC/EEPROM.
+	 */
+	while (1) {
+		if (0 == i2c_set_bus_num(CONFIG_I2C_GSC) &&
+		    0 == i2c_probe(GSC_EEPROM_ADDR))
+			break;
+		mdelay(1);
+	}
 
 	if (!gsc_i2c_read(GSC_EEPROM_ADDR, ANDROID_I2C_OFFSET, 1, &reg, sizeof(reg))) {
 		// Logic is active-low
@@ -777,6 +785,8 @@ int misc_init_r(void)
 #ifdef CONFIG_CMD_BMODE
 	add_board_boot_modes(board_boot_modes);
 #endif
+
+	set_android_environment_flags();
 
 	return 0;
 }
