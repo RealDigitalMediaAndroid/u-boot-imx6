@@ -120,6 +120,9 @@
 #define CONFIG_FIT
 #define CONFIG_FIT_VERBOSE
 
+/* Android Image Support */
+#define CONFIG_ANDROID_BOOT_IMAGE
+
 /* I2C Configs */
 #define CONFIG_CMD_I2C
 #define CONFIG_SYS_I2C
