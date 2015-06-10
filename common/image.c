@@ -994,6 +994,11 @@ int boot_get_ramdisk(int argc, char * const argv[], bootm_headers_t *images,
 			images->fit_noffset_rd = rd_noffset;
 			break;
 #endif
+#ifdef CONFIG_ANDROID_BOOT_IMAGE
+		case IMAGE_FORMAT_ANDROID:
+			android_image_get_ramdisk(buf, &rd_data, &rd_len);
+			break;
+#endif
 		default:
 #ifdef CONFIG_SUPPORT_RAW_INITRD
 			end = NULL;
