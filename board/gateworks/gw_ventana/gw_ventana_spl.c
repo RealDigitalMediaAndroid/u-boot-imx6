@@ -525,9 +525,6 @@ void board_init_f(ulong dummy)
 
 	/* Clear the BSS. */
 	memset(__bss_start, 0, __bss_end - __bss_start);
-
-	/* disable boot watchdog */
-	gsc_boot_wd_disable();
 }
 
 /* called from board_init_r after gd setup if CONFIG_SPL_BOARD_INIT defined */
@@ -569,6 +566,10 @@ int spl_start_uboot(void)
 	if (getenv_yesno("boot_os") == 1)
 		ret = 0;
 #endif
+	if (!ret) {
+		gsc_boot_wd_disable();
+		adjust_pmic((getenv_yesno("ldo-bypass") == 1) ? 0 : 1);
+	}
 	debug("%s booting %s\n", __func__, ret ? "uboot" : "linux");
 	return ret;
 }
