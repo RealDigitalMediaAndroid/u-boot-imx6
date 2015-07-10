@@ -268,8 +268,13 @@ void console_cursor(int state);
 #define LINUX_LOGO_LUT_OFFSET	0x20
 #define __initdata
 #include <linux_logo.h>
+#ifdef CONFIG_VIDEO_LOGO_NO_LOGO
+#define VIDEO_LOGO_WIDTH	0
+#define VIDEO_LOGO_HEIGHT	0
+#else
 #define VIDEO_LOGO_WIDTH	LINUX_LOGO_WIDTH
 #define VIDEO_LOGO_HEIGHT	LINUX_LOGO_HEIGHT
+#endif
 #define VIDEO_LOGO_LUT_OFFSET	LINUX_LOGO_LUT_OFFSET
 #define VIDEO_LOGO_COLORS	LINUX_LOGO_COLORS
 #endif /* CONFIG_VIDEO_BMP_LOGO */
