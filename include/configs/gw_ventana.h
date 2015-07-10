@@ -266,6 +266,10 @@
 #define CONFIG_IMX_HDMI
 #define CONFIG_IMX_VIDEO_SKIP
 
+#define CONFIG_SYS_CONSOLE_BG_COL	0xff
+#define CONFIG_SYS_CONSOLE_FG_COL	0xbd  /* 0x00 */
+#define CONFIG_VIDEO_LOGO_NO_LOGO
+
 /* serial console (ttymxc1,115200) */
 #define CONFIG_CONS_INDEX              1
 #define CONFIG_BAUDRATE                115200
