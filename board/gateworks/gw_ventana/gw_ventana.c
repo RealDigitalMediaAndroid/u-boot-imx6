@@ -747,6 +747,8 @@ int misc_init_r(void)
 			eth_setenv_enetaddr("eth1addr", info->mac1);
 		}
 
+                eth_setenv_enetaddr("gw_ethaddr", info->mac0);
+
 		/* board serial-number */
 		sprintf(str, "%6d", info->serial);
 		setenv("serial#", str);
