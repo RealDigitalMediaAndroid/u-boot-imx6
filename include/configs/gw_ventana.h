@@ -256,9 +256,6 @@
 #define CONFIG_CFB_CONSOLE
 #define CONFIG_VGA_AS_SINGLE_DEVICE
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_VIDEO_BMP_RLE8
-#define CONFIG_SPLASH_SCREEN
-#define CONFIG_BMP_16BPP
 #define CONFIG_VIDEO_LOGO
 #define CONFIG_IPUV3_CLK          260000000
 #define CONFIG_CMD_HDMIDETECT
@@ -269,6 +266,12 @@
 #define CONFIG_SYS_CONSOLE_BG_COL	0xff
 #define CONFIG_SYS_CONSOLE_FG_COL	0xbd  /* 0x00 */
 #define CONFIG_VIDEO_LOGO_NO_LOGO
+
+#if 0
+#define CONFIG_VIDEO_BMP_LOGO
+#define CONFIG_SPLASH_SCREEN_ALIGN
+#define CONFIG_HIDE_LOGO_VERSION  /* Custom config to hide U-boot version */
+#endif
 
 /* serial console (ttymxc1,115200) */
 #define CONFIG_CONS_INDEX              1
@@ -282,6 +285,7 @@
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_CMDLINE_EDITING
 #define CONFIG_HWCONFIG
+#define CONFIG_PREBOOT
 
 /* Print Buffer Size */
 #define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
@@ -359,15 +363,14 @@
 #define CONFIG_LOADADDR           CONFIG_SYS_LOAD_ADDR
 #define CONFIG_IPADDR             192.168.1.1
 #define CONFIG_SERVERIP           192.168.1.146
-#define HWCONFIG_DEFAULT \
-	"hwconfig=rs232;" \
-	"dio0:mode=gpio;dio1:mode=gpio;dio2:mode=gpio;dio3:mode=gpio\0" \
 
 #define CONFIG_EXTRA_ENV_SETTINGS_COMMON \
+	"splashpos=m,m\0" \
+	"pcidisable=1\0" \
 	"usb_pgood_delay=2000\0" \
 	"console=ttymxc1\0" \
 	"bootdevs=usb mmc sata flash\0" \
-	HWCONFIG_DEFAULT \
+	"hwconfig=_UNKNOWN_\0" \
 	"video=\0" \
 	\
 	"mtdparts=" MTDPARTS_DEFAULT "\0" \
